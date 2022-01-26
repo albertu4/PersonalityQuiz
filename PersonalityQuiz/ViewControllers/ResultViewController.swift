@@ -9,11 +9,6 @@ import UIKit
 
 class ResultViewController: UIViewController {
     
-    // 1. Передать сюда массив с ответами
-    // 2. Определить наиболее часто встречающийся тип животного
-    // 3. Отобразить результат в соответствии с этим животным
-    // 4. Избавиться от кнопки возврата на предыдущий экран
-    
     //MARK: - IBOutlets
     @IBOutlet var resultTitle: UILabel!
     @IBOutlet var resultDescription: UILabel!
@@ -34,6 +29,7 @@ class ResultViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.setHidesBackButton(true, animated: false)
         
+        // Iterate array of choices
         answersChosen.forEach {
             switch $0.animal {
             case .dog:
@@ -51,6 +47,7 @@ class ResultViewController: UIViewController {
         animals.append(rabbits)
         animals.append(turtles)
         
+        // Find the most frequently selected animal
         let maxChosenAnimal = animals.max { a, b in a.count < b.count}
         
         maxChosenAnimal?.forEach {
