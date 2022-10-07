@@ -16,33 +16,37 @@ class ResultViewController: UIViewController {
     //MARK: - Public property
     var answersChosen: [Answer]!
     
-    //MARK: - Private properties
-    private var animals: [Animal : Int] = [:]
-    
     //MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.setHidesBackButton(true, animated: false)
+        navigationItem.hidesBackButton = true
         
-        answersChosen.forEach() { answer in
-            if animals.keys.contains(answer.animal) {
-                animals[answer.animal]! += 1
-                
-                print("contains \(answer.animal)")
+        updateResult()
+    }
+    
+    private func updateResult() {
+        
+        var animals: [Animal : Int] = [:]
+        let animalsArray = answersChosen.map { $0.animal }
+        
+        for animal in animalsArray {
+            if let animalTypeCount = animals[animal] {
+                animals.updateValue(animalTypeCount + 1, forKey: animal)
             } else {
-                animals.updateValue(1, forKey: answer.animal)
-                print("contains \(answer.animal)")
+                animals[animal] = 1
             }
         }
         
-        print(animals)
+        let sortedAnimals = animals.sorted { $0.value > $1.value }
+        guard let mostOftenChosenAnimal = sortedAnimals.first?.key else { return }
         
-        let sortedAnimals = animals.sorted { firstAnimal, secondAnimal in
-            return firstAnimal.value > secondAnimal.value
-        }
+        updateUI(mostOftenChosenAnimal)
+    }
+    
+    private func updateUI(_ animal: Animal) {
+        resultTitle.text = String(animal.rawValue)
+        resultDescription.text = animal.definition
         
-        resultTitle.text = "\(sortedAnimals.first?.key.rawValue ?? " ")"
-        resultDescription.text = sortedAnimals.first?.key.definition
-        }
+    }
     
 }
