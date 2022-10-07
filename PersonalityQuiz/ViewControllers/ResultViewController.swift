@@ -17,54 +17,32 @@ class ResultViewController: UIViewController {
     var answersChosen: [Answer]!
     
     //MARK: - Private properties
-    private var animals: [[Animal]] = []
-    
-    private var dogs: [Animal] = []
-    private var cats: [Animal] = []
-    private var rabbits: [Animal] = []
-    private var turtles: [Animal] = []
+    private var animals: [Animal : Int] = [:]
     
     //MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setHidesBackButton(true, animated: false)
         
-        // Iterate array of choices
-        answersChosen.forEach {
-            switch $0.animal {
-            case .dog:
-                dogs.append($0.animal)
-            case .cat:
-                cats.append($0.animal)
-            case .rabbit:
-                rabbits.append($0.animal)
-            default:
-                turtles.append($0.animal)
-            }
-        }
-        animals.append(dogs)
-        animals.append(cats)
-        animals.append(rabbits)
-        animals.append(turtles)
-        
-        // Find the most frequently selected animal
-        let maxChosenAnimal = animals.max { a, b in a.count < b.count}
-        
-        maxChosenAnimal?.forEach {
-            if $0 == .dog {
-                resultTitle.text = String(Animal.dog.rawValue)
-                resultDescription.text = Animal.dog.definition
-            } else if $0 == .cat {
-                resultTitle.text = String(Animal.cat.rawValue)
-                resultDescription.text = Animal.cat.definition
-            } else if $0 == .rabbit {
-                resultTitle.text = String(Animal.rabbit.rawValue)
-                resultDescription.text = Animal.rabbit.definition
+        answersChosen.forEach() { answer in
+            if animals.keys.contains(answer.animal) {
+                animals[answer.animal]! += 1
+                
+                print("contains \(answer.animal)")
             } else {
-                resultTitle.text = String(Animal.turtle.rawValue)
-                resultDescription.text = Animal.turtle.definition
+                animals.updateValue(1, forKey: answer.animal)
+                print("contains \(answer.animal)")
             }
         }
-    }
+        
+        print(animals)
+        
+        let sortedAnimals = animals.sorted { firstAnimal, secondAnimal in
+            return firstAnimal.value > secondAnimal.value
+        }
+        
+        resultTitle.text = "\(sortedAnimals.first?.key.rawValue ?? " ")"
+        resultDescription.text = sortedAnimals.first?.key.definition
+        }
     
 }
